@@ -1,0 +1,35 @@
+## .NET / ASP.NET Core
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+bin/
+obj/
+out/
+publish/
+*.log
+
+## Base de datos SQLite - NO subir
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+## Secretos y configuración sensible
+**/appsettings.Development.json
+**/secrets.json
+**/*.pfx
+**/*.key
+
+## Temporales del sistema
+Thumbs.db
+.DS_Store
+desktop.ini
+
+## Rider / VS Code / Visual Studio
+.idea/
+.vscode/
+*.swp
+*~
