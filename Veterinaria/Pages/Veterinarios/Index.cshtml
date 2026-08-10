@@ -1,0 +1,99 @@
+@page
+@model Veterinaria.Pages.Veterinarios.IndexModel
+@{
+    ViewData["Title"] = "Veterinarios";
+}
+
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title"><i class="bi bi-hospital me-2"></i>Veterinarios</h1>
+        <p class="page-subtitle">Gestión del personal veterinario</p>
+    </div>
+    <a asp-page="Create" class="btn btn-primary btn-arca">
+        <i class="bi bi-person-plus-fill me-1"></i> Nuevo veterinario
+    </a>
+</div>
+
+<!-- Búsqueda -->
+<div class="card card-arca mb-4">
+    <div class="card-body py-3">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="busqueda" value="@Model.Busqueda"
+                           class="form-control" placeholder="Buscar por nombre, apellido o especialidad…" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Buscar</button>
+            </div>
+            <div class="col-md-2">
+                <a asp-page="Index" class="btn btn-outline-secondary w-100">Limpiar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!Model.Veterinarios.Any())
+{
+    <div class="empty-state">
+        <i class="bi bi-hospital"></i>
+        <p>No se encontraron veterinarios.</p>
+        <a asp-page="Create" class="btn btn-primary btn-arca">Registrar el primero</a>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var v in Model.Veterinarios)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-vet-pro h-100">
+                    <!-- Cabecera de la card -->
+                    <div class="vet-card-header">
+                        <div class="vet-avatar">
+                            @v.Nombre[0]@v.Apellido[0]
+                        </div>
+                        <div class="vet-info">
+                            <div class="vet-nombre">@v.NombreCompleto</div>
+                            <div class="vet-especialidad">@v.Especialidad</div>
+                        </div>
+                        @if (v.Estado == Veterinaria.Models.EstadoGeneral.Activo)
+                        { <span class="badge badge-activo ms-auto">Activo</span> }
+                        else
+                        { <span class="badge badge-inactivo ms-auto">Inactivo</span> }
+                    </div>
+
+                    <!-- Cuerpo -->
+                    <div class="vet-card-body">
+                        <div class="vet-dato">
+                            <i class="bi bi-telephone-fill"></i>
+                            <span>@v.Telefono</span>
+                        </div>
+                        <div class="vet-dato">
+                            <i class="bi bi-award-fill"></i>
+                            <span>@v.Especialidad</span>
+                        </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="vet-card-footer">
+                        <a asp-page="Details" asp-route-id="@v.Id" class="vet-btn vet-btn-ver">
+                            <i class="bi bi-eye-fill"></i> Ver
+                        </a>
+                        <a asp-page="Edit" asp-route-id="@v.Id" class="vet-btn vet-btn-editar">
+                            <i class="bi bi-pencil-fill"></i> Editar
+                        </a>
+                        <a asp-page="Delete" asp-route-id="@v.Id" class="vet-btn vet-btn-eliminar">
+                            <i class="bi bi-trash-fill"></i> Eliminar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="text-muted small mt-3">
+        <i class="bi bi-people me-1"></i>@Model.Veterinarios.Count veterinario(s) encontrado(s)
+    </div>
+}

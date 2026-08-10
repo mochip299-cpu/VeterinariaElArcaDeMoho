@@ -1,0 +1,95 @@
+@page "{id:int}"
+@model Veterinaria.Pages.Propietarios.DetailsModel
+@{
+    ViewData["Title"] = "Detalle del propietario";
+}
+
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title"><i class="bi bi-person-lines-fill me-2"></i>@Model.Propietario!.NombreCompleto</h1>
+        <p class="page-subtitle">Detalle del propietario</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-page="Edit" asp-route-id="@Model.Propietario.Id" class="btn btn-warning">
+            <i class="bi bi-pencil me-1"></i> Editar
+        </a>
+        <a asp-page="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Volver
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Datos personales -->
+    <div class="col-md-5">
+        <div class="card card-arca h-100">
+            <div class="card-header card-header-arca">
+                <i class="bi bi-person-badge me-2"></i>Datos personales
+            </div>
+            <div class="card-body">
+                <dl class="detail-list">
+                    <dt>Nombre completo</dt>
+                    <dd>@Model.Propietario.NombreCompleto</dd>
+
+                    <dt>Teléfono</dt>
+                    <dd><i class="bi bi-telephone me-1 text-muted"></i>@Model.Propietario.Telefono</dd>
+
+                    <dt>Correo</dt>
+                    <dd><i class="bi bi-envelope me-1 text-muted"></i>@Model.Propietario.Correo</dd>
+
+                    <dt>Estado</dt>
+                    <dd>
+                        @if (Model.Propietario.Estado == Veterinaria.Models.EstadoGeneral.Activo)
+                        {
+                            <span class="badge badge-activo">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-inactivo">Inactivo</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mascotas del propietario -->
+    <div class="col-md-7">
+        <div class="card card-arca h-100">
+            <div class="card-header card-header-arca d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-heart-fill me-2"></i>Mascotas (@Model.Propietario.Mascotas.Count)</span>
+                <a asp-page="/Mascotas/Create" asp-route-propietarioId="@Model.Propietario.Id"
+                   class="btn btn-sm btn-primary btn-arca">
+                    <i class="bi bi-plus-lg me-1"></i> Nueva mascota
+                </a>
+            </div>
+            <div class="card-body p-0">
+                @if (!Model.Propietario.Mascotas.Any())
+                {
+                    <div class="empty-state py-4">
+                        <i class="bi bi-emoji-smile" style="font-size:2rem"></i>
+                        <p class="mt-2">Este propietario aún no tiene mascotas registradas.</p>
+                    </div>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var m in Model.Propietario.Mascotas)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-semibold">@m.Nombre</span>
+                                    <small class="text-muted ms-2">@m.Especie · @(m.Raza ?? "Raza no especificada")</small>
+                                </div>
+                                <a asp-page="/Mascotas/Details" asp-route-id="@m.Id"
+                                   class="btn btn-sm btn-outline-info">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>

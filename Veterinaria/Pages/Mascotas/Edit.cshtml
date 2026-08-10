@@ -1,0 +1,76 @@
+@page "{id:int}"
+@model Veterinaria.Pages.Mascotas.EditModel
+@{
+    ViewData["Title"] = "Editar mascota";
+}
+
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-pencil-square me-2"></i>Editar mascota</h1>
+    <p class="page-subtitle">Modifique los datos de la mascota</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-arca">
+            <div class="card-body p-4">
+                <form method="post">
+                    <input type="hidden" asp-for="Mascota.Id" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="Mascota.Nombre" class="form-label fw-semibold"></label>
+                            <input asp-for="Mascota.Nombre" class="form-control" autofocus />
+                            <span asp-validation-for="Mascota.Nombre" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Mascota.PropietarioId" class="form-label fw-semibold"></label>
+                            <select asp-for="Mascota.PropietarioId" asp-items="Model.PropietariosSelectList"
+                                    class="form-select"></select>
+                            <span asp-validation-for="Mascota.PropietarioId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Mascota.Especie" class="form-label fw-semibold"></label>
+                            <input asp-for="Mascota.Especie" class="form-control" />
+                            <span asp-validation-for="Mascota.Especie" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Mascota.Raza" class="form-label fw-semibold"></label>
+                            <input asp-for="Mascota.Raza" class="form-control" />
+                            <span asp-validation-for="Mascota.Raza" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Mascota.FechaNacimiento" class="form-label fw-semibold"></label>
+                            <input asp-for="Mascota.FechaNacimiento" class="form-control" type="date" />
+                            <span asp-validation-for="Mascota.FechaNacimiento" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Mascota.Color" class="form-label fw-semibold"></label>
+                            <input asp-for="Mascota.Color" class="form-control" />
+                            <span asp-validation-for="Mascota.Color" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Mascota.Estado" class="form-label fw-semibold"></label>
+                            <select asp-for="Mascota.Estado"
+                                    asp-items="Html.GetEnumSelectList<Veterinaria.Models.EstadoGeneral>()"
+                                    class="form-select"></select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-arca">
+                            <i class="bi bi-floppy me-1"></i> Guardar cambios
+                        </button>
+                        <a asp-page="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle me-1"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

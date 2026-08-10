@@ -1,0 +1,100 @@
+@page "{id:int}"
+@model Veterinaria.Pages.Mascotas.DetailsModel
+@{
+    ViewData["Title"] = "Detalle de mascota";
+    var m = Model.Mascota!;
+}
+
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title"><i class="bi bi-heart-fill me-2 text-danger"></i>@m.Nombre</h1>
+        <p class="page-subtitle">@m.Especie · @(m.Raza ?? "Raza no especificada")</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-page="Edit" asp-route-id="@m.Id" class="btn btn-warning">
+            <i class="bi bi-pencil me-1"></i> Editar
+        </a>
+        <a asp-page="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Volver
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-5">
+        <div class="card card-arca">
+            <div class="card-header card-header-arca">
+                <i class="bi bi-info-circle me-2"></i>Datos de la mascota
+            </div>
+            <div class="card-body">
+                <dl class="detail-list">
+                    <dt>Nombre</dt>
+                    <dd>@m.Nombre</dd>
+                    <dt>Especie</dt>
+                    <dd>@m.Especie</dd>
+                    <dt>Raza</dt>
+                    <dd>@(m.Raza ?? "No especificada")</dd>
+                    <dt>Color</dt>
+                    <dd>@m.Color</dd>
+                    <dt>Fecha de nacimiento</dt>
+                    <dd>@m.FechaNacimiento.ToString("dd/MM/yyyy") <small class="text-muted">(~@m.Edad año(s))</small></dd>
+                    <dt>Estado</dt>
+                    <dd>
+                        @if (m.Estado == Veterinaria.Models.EstadoGeneral.Activo)
+                        { <span class="badge badge-activo">Activo</span> }
+                        else
+                        { <span class="badge badge-inactivo">Inactivo</span> }
+                    </dd>
+                    <dt>Propietario</dt>
+                    <dd>
+                        <a asp-page="/Propietarios/Details" asp-route-id="@m.PropietarioId">
+                            @m.Propietario?.NombreCompleto
+                        </a>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card card-arca">
+            <div class="card-header card-header-arca d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-calendar2-check me-2"></i>Historial de citas (@m.Citas.Count)</span>
+                <a asp-page="/Citas/Create" asp-route-mascotaId="@m.Id" class="btn btn-sm btn-primary btn-arca">
+                    <i class="bi bi-plus-lg me-1"></i> Nueva cita
+                </a>
+            </div>
+            <div class="card-body p-0">
+                @if (!m.Citas.Any())
+                {
+                    <div class="empty-state py-4">
+                        <i class="bi bi-calendar-x" style="font-size:2rem"></i>
+                        <p class="mt-2">No hay citas registradas para esta mascota.</p>
+                    </div>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var c in m.Citas.OrderByDescending(x => x.FechaHoraAtencion))
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-semibold">@c.FechaHoraAtencion.ToString("dd/MM/yyyy HH:mm")</div>
+                                    <small class="text-muted">@c.Motivo</small>
+                                </div>
+                                @{
+                                    var badgeClass = c.Estado switch {
+                                        Veterinaria.Models.EstadoCita.Completada => "badge-completada",
+                                        Veterinaria.Models.EstadoCita.Cancelada  => "badge-cancelada",
+                                        _                                         => "badge-pendiente"
+                                    };
+                                }
+                                <span class="badge @badgeClass">@c.Estado</span>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>
