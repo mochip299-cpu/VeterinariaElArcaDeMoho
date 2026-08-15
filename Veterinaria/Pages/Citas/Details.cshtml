@@ -1,0 +1,94 @@
+@page "{id:int}"
+@model Veterinaria.Pages.Citas.DetailsModel
+@{
+    ViewData["Title"] = "Detalle de cita";
+    var c = Model.Cita!;
+    var badgeClass = c.Estado switch {
+        Veterinaria.Models.EstadoCita.Completada => "badge-completada",
+        Veterinaria.Models.EstadoCita.Cancelada  => "badge-cancelada",
+        _                                         => "badge-pendiente"
+    };
+}
+
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title">
+            <i class="bi bi-calendar2-event me-2"></i>Cita #@c.Id
+            <span class="badge @badgeClass ms-2" style="font-size:.7em;vertical-align:middle">@c.Estado</span>
+        </h1>
+        <p class="page-subtitle">@c.FechaHoraAtencion.ToString("dddd, dd 'de' MMMM 'de' yyyy — HH:mm", new System.Globalization.CultureInfo("es-ES"))</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-page="Edit" asp-route-id="@c.Id" class="btn btn-warning">
+            <i class="bi bi-pencil me-1"></i> Editar
+        </a>
+        <a asp-page="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Volver
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Datos de la cita -->
+    <div class="col-md-6">
+        <div class="card card-arca h-100">
+            <div class="card-header card-header-arca">
+                <i class="bi bi-info-circle me-2"></i>Datos de la cita
+            </div>
+            <div class="card-body">
+                <dl class="detail-list">
+                    <dt>Mascota</dt>
+                    <dd>
+                        <a asp-page="/Mascotas/Details" asp-route-id="@c.MascotaId">
+                            @c.Mascota?.Nombre
+                        </a>
+                        <small class="text-muted ms-1">(@c.Mascota?.Especie)</small>
+                    </dd>
+                    <dt>Propietario</dt>
+                    <dd>
+                        <a asp-page="/Propietarios/Details" asp-route-id="@c.Mascota?.PropietarioId">
+                            @c.Mascota?.Propietario?.NombreCompleto
+                        </a>
+                    </dd>
+                    <dt>Veterinario</dt>
+                    <dd>@c.Veterinario?.NombreCompleto</dd>
+                    <dt>Especialidad</dt>
+                    <dd>@c.Veterinario?.Especialidad</dd>
+                    <dt>Fecha y hora</dt>
+                    <dd>@c.FechaHoraAtencion.ToString("dd/MM/yyyy HH:mm")</dd>
+                    <dt>Estado</dt>
+                    <dd><span class="badge @badgeClass">@c.Estado</span></dd>
+                    <dt>Registrado el</dt>
+                    <dd><small class="text-muted">@c.CreadoEn.ToString("dd/MM/yyyy HH:mm")</small></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Motivo y Diagnóstico -->
+    <div class="col-md-6">
+        <div class="card card-arca mb-3">
+            <div class="card-header card-header-arca">
+                <i class="bi bi-chat-text me-2"></i>Motivo de la consulta
+            </div>
+            <div class="card-body">
+                <p class="mb-0">@c.Motivo</p>
+            </div>
+        </div>
+        <div class="card card-arca">
+            <div class="card-header card-header-arca">
+                <i class="bi bi-file-medical me-2"></i>Diagnóstico
+            </div>
+            <div class="card-body">
+                @if (string.IsNullOrWhiteSpace(c.Diagnostico))
+                {
+                    <p class="text-muted fst-italic mb-0">Sin diagnóstico registrado aún.</p>
+                }
+                else
+                {
+                    <p class="mb-0" style="white-space:pre-line">@c.Diagnostico</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+@page
+@model Veterinaria.Pages.Citas.CreateModel
+@{
+    ViewData["Title"] = "Nueva cita";
+}
+
+<div class="page-header">
+    <h1 class="page-title"><i class="bi bi-calendar-plus me-2"></i>Nueva cita</h1>
+    <p class="page-subtitle">Complete los datos de la cita</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-arca">
+            <div class="card-body p-4">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="Cita.MascotaId" class="form-label fw-semibold"></label>
+                            <select asp-for="Cita.MascotaId" asp-items="Model.MascotasSelectList"
+                                    class="form-select">
+                                <option value="">-- Seleccione mascota --</option>
+                            </select>
+                            <span asp-validation-for="Cita.MascotaId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Cita.VeterinarioId" class="form-label fw-semibold"></label>
+                            <select asp-for="Cita.VeterinarioId" asp-items="Model.VeterinariosSelectList"
+                                    class="form-select">
+                                <option value="">-- Seleccione veterinario --</option>
+                            </select>
+                            <span asp-validation-for="Cita.VeterinarioId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Cita.FechaHoraAtencion" class="form-label fw-semibold"></label>
+                            <input asp-for="Cita.FechaHoraAtencion" class="form-control" type="datetime-local" />
+                            <span asp-validation-for="Cita.FechaHoraAtencion" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Cita.Estado" class="form-label fw-semibold"></label>
+                            <select asp-for="Cita.Estado"
+                                    asp-items="Html.GetEnumSelectList<Veterinaria.Models.EstadoCita>()"
+                                    class="form-select"></select>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Cita.Motivo" class="form-label fw-semibold"></label>
+                            <input asp-for="Cita.Motivo" class="form-control"
+                                   placeholder="Ej: Control rutinario, vacunación, revisión…" autofocus />
+                            <span asp-validation-for="Cita.Motivo" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Cita.Diagnostico" class="form-label fw-semibold">
+                                Diagnóstico <small class="text-muted fw-normal">(opcional)</small>
+                            </label>
+                            <textarea asp-for="Cita.Diagnostico" class="form-control" rows="3"
+                                      placeholder="Complete después de la atención…"></textarea>
+                            <span asp-validation-for="Cita.Diagnostico" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-arca">
+                            <i class="bi bi-floppy me-1"></i> Guardar
+                        </button>
+                        <a asp-page="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle me-1"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

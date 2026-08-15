@@ -1,0 +1,131 @@
+@page
+@model Veterinaria.Pages.Citas.IndexModel
+@{
+    ViewData["Title"] = "Citas";
+}
+
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title"><i class="bi bi-calendar2-check me-2"></i>Citas</h1>
+        <p class="page-subtitle">Gestión de citas veterinarias</p>
+    </div>
+    <a asp-page="Create" class="btn btn-primary btn-arca">
+        <i class="bi bi-plus-circle-fill me-1"></i> Nueva cita
+    </a>
+</div>
+
+<!-- Filtros -->
+<div class="card card-arca mb-4">
+    <div class="card-body py-3">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold">Buscar</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" name="busqueda" value="@Model.Busqueda"
+                           class="form-control" placeholder="Mascota, veterinario o motivo…" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">Estado</label>
+                <select name="estado" class="form-select">
+                    <option value="">Todos</option>
+                    <option value="0" selected="@(Model.EstadoFiltro == Veterinaria.Models.EstadoCita.Pendiente)">Pendiente</option>
+                    <option value="1" selected="@(Model.EstadoFiltro == Veterinaria.Models.EstadoCita.Completada)">Completada</option>
+                    <option value="2" selected="@(Model.EstadoFiltro == Veterinaria.Models.EstadoCita.Cancelada)">Cancelada</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">Desde</label>
+                <input type="date" name="desde" value="@Model.Desde?.ToString("yyyy-MM-dd")" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small fw-semibold">Hasta</label>
+                <input type="date" name="hasta" value="@Model.Hasta?.ToString("yyyy-MM-dd")" class="form-control" />
+            </div>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-funnel"></i>
+                </button>
+            </div>
+            <div class="col-md-1">
+                <a asp-page="Index" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-x-lg"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!Model.Citas.Any())
+{
+    <div class="empty-state">
+        <i class="bi bi-calendar-x"></i>
+        <p>No se encontraron citas.</p>
+        <a asp-page="Create" class="btn btn-primary btn-arca">Registrar la primera</a>
+    </div>
+}
+else
+{
+    <div class="card card-arca">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-head-arca">
+                    <tr>
+                        <th>Fecha y hora</th>
+                        <th>Mascota</th>
+                        <th>Propietario</th>
+                        <th>Veterinario</th>
+                        <th>Motivo</th>
+                        <th class="text-center">Estado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model.Citas)
+                    {
+                        var rowClass = c.Estado switch {
+                            Veterinaria.Models.EstadoCita.Cancelada  => "table-danger",
+                            Veterinaria.Models.EstadoCita.Completada => "table-success",
+                            _ => ""
+                        };
+                        <tr class="@rowClass">
+                            <td>
+                                <div class="fw-semibold">@c.FechaHoraAtencion.ToString("dd/MM/yyyy")</div>
+                                <small class="text-muted">@c.FechaHoraAtencion.ToString("HH:mm")</small>
+                            </td>
+                            <td>@c.Mascota?.Nombre</td>
+                            <td>
+                                <small class="text-muted">@c.Mascota?.Propietario?.NombreCompleto</small>
+                            </td>
+                            <td>@c.Veterinario?.NombreCompleto</td>
+                            <td>
+                                <span title="@c.Motivo">
+                                    @(c.Motivo.Length > 40 ? c.Motivo[..40] + "…" : c.Motivo)
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                @{
+                                    var badgeClass = c.Estado switch {
+                                        Veterinaria.Models.EstadoCita.Completada => "badge-completada",
+                                        Veterinaria.Models.EstadoCita.Cancelada  => "badge-cancelada",
+                                        _                                         => "badge-pendiente"
+                                    };
+                                }
+                                <span class="badge @badgeClass">@c.Estado</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-page="Details" asp-route-id="@c.Id" class="btn btn-outline-info" title="Ver"><i class="bi bi-eye"></i></a>
+                                    <a asp-page="Edit"    asp-route-id="@c.Id" class="btn btn-outline-warning" title="Editar"><i class="bi bi-pencil"></i></a>
+                                    <a asp-page="Delete"  asp-route-id="@c.Id" class="btn btn-outline-danger" title="Eliminar"><i class="bi bi-trash"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-muted small">@Model.Citas.Count cita(s) encontrada(s)</div>
+    </div>
+}
