@@ -1,0 +1,89 @@
+@page
+@model Veterinaria.Pages.Auth.RegistroModel
+@{
+    ViewData["Title"] = "Registrarse";
+    Layout = "~/Pages/Shared/_LayoutAuth.cshtml";
+}
+
+<div class="auth-card">
+    <div class="auth-logo">
+        <img src="~/images/paw.svg" alt="El Arca de Moho" />
+    </div>
+    <h2 class="auth-title">El Arca de Moho</h2>
+    <p class="auth-subtitle">Crear nueva cuenta</p>
+
+    <form method="post" class="mt-4">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small"></div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Email" class="form-label fw-semibold"></label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input asp-for="Input.Email" class="form-control" placeholder="correo@ejemplo.com" autofocus />
+            </div>
+            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Input.Password" class="form-label fw-semibold"></label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input asp-for="Input.Password" class="form-control" placeholder="Mínimo 8 caracteres" id="passInput" />
+                <button class="btn btn-outline-secondary" type="button" onclick="togglePass('passInput','eye1')">
+                    <i class="bi bi-eye" id="eye1"></i>
+                </button>
+            </div>
+            <span asp-validation-for="Input.Password" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="Input.ConfirmarPassword" class="form-label fw-semibold"></label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                <input asp-for="Input.ConfirmarPassword" class="form-control" placeholder="Repetir contraseña" id="passInput2" />
+                <button class="btn btn-outline-secondary" type="button" onclick="togglePass('passInput2','eye2')">
+                    <i class="bi bi-eye" id="eye2"></i>
+                </button>
+            </div>
+            <span asp-validation-for="Input.ConfirmarPassword" class="text-danger small"></span>
+        </div>
+
+        <!-- Requisitos de contraseña -->
+        <div class="password-rules mb-4">
+            <small class="text-muted">La contraseña debe tener:</small>
+            <ul class="text-muted small mt-1 mb-0 ps-3">
+                <li>Mínimo 8 caracteres</li>
+                <li>Al menos una mayúscula</li>
+                <li>Al menos una minúscula</li>
+                <li>Al menos un número</li>
+            </ul>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-arca w-100 py-2 fw-semibold">
+            <i class="bi bi-person-plus me-2"></i>Crear cuenta
+        </button>
+
+        <div class="text-center mt-3">
+            <small class="text-muted">¿Ya tenés cuenta?
+                <a asp-page="/Auth/Login" class="fw-semibold">Iniciar sesión</a>
+            </small>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function togglePass(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon  = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'bi bi-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'bi bi-eye';
+            }
+        }
+    </script>
+}
